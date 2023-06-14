@@ -1,4 +1,4 @@
-package com.example.libraryback.payload;
+package com.example.libraryback.payload.api;
 
 import lombok.*;
 

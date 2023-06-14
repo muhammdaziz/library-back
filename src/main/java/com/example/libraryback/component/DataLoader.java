@@ -13,64 +13,85 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddlMode;
 
-    private final String superAdminUsername = "superAdmin@admin.com";
-
-    private final String superAdminPassword = "123";
-
+    private final String adminPassword = "123";
     private final String adminUsername = "admin@admin.com";
 
-    private final String adminPassword = "123";
+    private final String superAdminPassword = "123";
+    private final String superAdminUsername = "superAdmin@admin.com";
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
+
+        if (Objects.equals(ddlMode, "create")) {
+            System.out.println("\n\n\n\n\n\n\n\nyou are running with CREATE ddl mode");
+            System.out.println("enter 12 to continue");
+            Scanner scanner = new Scanner(System.in);
+
+            int input = scanner.nextInt();
+
+            if (!Objects.equals(input, 12))
+                System.exit(1);
+        }
+
+
         if (Objects.equals(ddlMode, "create")) {
 
-            Role roleSuperAdmin = new Role();
-            roleSuperAdmin.setName(RoleEnum.SUPER_ROLE_ADMIN.name());
-            roleSuperAdmin.setDescription("SUPER ADMIN");
-            roleSuperAdmin.setPermissions(Set.of(PermissionEnum.values()));
+            Role roleSuperAdmin = Role
+                    .builder()
+                    .description("SUPER ADMIN")
+                    .name(RoleEnum.SUPER_ROLE_ADMIN.name())
+                    .permissions(Set.of(PermissionEnum.values()))
+                    .build();
+
             roleRepository.save(roleSuperAdmin);
 
 
-            Role roleADMIN = new Role();
-            roleADMIN.setName(RoleEnum.ROLE_ADMIN.name());
-            roleADMIN.setDescription("ADMIN");
-            roleADMIN.setPermissions(Set.of(PermissionEnum.ADD_BOOK));
+            Role roleADMIN = Role
+                    .builder()
+                    .description("ADMIN")
+                    .name(RoleEnum.ROLE_ADMIN.name())
+                    .permissions(Set.of(PermissionEnum.ADD_BOOK))
+                    .build();
+
             roleRepository.save(roleADMIN);
 
-            User superAdmin = new User(
-                    superAdminUsername,
-                    passwordEncoder.encode(superAdminPassword));
-            superAdmin.setFirstname("AAAAAAAAA");
-            superAdmin.setLastname("aaaa");
-            superAdmin.setRole(roleSuperAdmin);
-            superAdmin.setEnabled(true);
-
-            User admin = new User(
-                    adminUsername,
-                    passwordEncoder.encode(adminPassword));
-            admin.setFirstname("BBBBBBBB");
-            admin.setLastname("bbbb");
-            admin.setRole(roleADMIN);
-            admin.setEnabled(true);
-
+            User superAdmin = User
+                    .builder()
+                    .enabled(true)
+                    .lastname("Admin")
+                    .firstname("Super")
+                    .role(roleSuperAdmin)
+                    .email(superAdminUsername)
+                    .password(passwordEncoder.encode(superAdminPassword))
+                    .build();
 
             userRepository.save(superAdmin);
+
+            User admin = User
+                    .builder()
+                    .enabled(true)
+                    .role(roleADMIN)
+                    .lastname("Just")
+                    .firstname("Admin")
+                    .email(adminUsername)
+                    .password(passwordEncoder.encode(adminPassword))
+                    .build();
+
             userRepository.save(admin);
         }
     }
-
 
 }

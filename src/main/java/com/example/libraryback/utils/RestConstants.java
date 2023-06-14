@@ -1,20 +1,26 @@
 package com.example.libraryback.utils;
 
 public interface RestConstants {
-    String DEFAULT_PAGE_NUMBER = "0";
-    String DEFAULT_PAGE_SIZE = "10";
 
-    String UPLOAD_FILE = "/Users/user/IdeaProjects/lib/files/";
-
-    String AUTHENTICATION_HEADER = "Authorization";
+    String UPLOAD_FILE = "/Users/user/IdeaProjects/library/files/";
 
     String[] OPEN_PAGES = {
             "/*",
-            "/api/auth" + "/**",
-            "/api/book/list/**",
-            "/api/book/{id}/**",
-            "/api/files/**",
-            "/api/category/list/**",
-            "/api/category/{id}",
+            "/api/**",
+            "/api/book/**",
+            "/api/file/**",
+            "/api/genre/**",
+            "/api/discount/**",
+            "/api/author/**",
+            "/api/service/**",
+            "/api/promotion/**",
+            "/api/recommendation/**",
     };
+
+    String DEFAULT_PAGE_SIZE = "10";
+
+    String DEFAULT_PAGE_NUMBER = "0";
+
+    String AUTHENTICATION_HEADER = "Authorization";
+
 }

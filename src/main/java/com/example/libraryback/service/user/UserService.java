@@ -1,11 +1,12 @@
-package com.example.libraryback.service;
+package com.example.libraryback.service.user;
 
 import com.example.libraryback.entity.User;
-import com.example.libraryback.payload.ApiResult;
+import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.UserDTO;
 
 public interface UserService {
-    ApiResult<UserDTO> getUserMe(User user);
 
     ApiResult<Boolean> logout(User user);
+
+    ApiResult<UserDTO> getUserMe(User user);
 }

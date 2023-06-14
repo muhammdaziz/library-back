@@ -1,0 +1,42 @@
+POST http://localhost:8090/api/book
+Content-Type: application/json
+
+{
+  "price": 15.3,
+  "isbn": "121341381648 (ISBN13: 121341381648)",
+  "title": "Pushing Clouds",
+  "language": "English",
+  "publisher": "Wepress Inc.",
+  "authorId": 1,
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore e fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem",
+  "publishedDate": "2012-04-23T18:25:43.511Z",
+  "genres": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "editionFormat": "Paperback, 450 Pages"
+}
+
+####
+POST http://localhost:8090/api/author
+Content-Type: application/json
+
+{
+  "lastname": "Smile",
+  "firstname": "Kevin"
+}
+
+
+###
+
+POST http://localhost:8090/api/genre
+Content-Type: application/json
+
+{
+  "name": "Biography"
+}
+
+###
+http://localhost:8090/api/promotion

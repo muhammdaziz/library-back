@@ -1,7 +1,7 @@
 package com.example.libraryback.controller;
 
-import com.example.libraryback.payload.ApiResult;
-import com.example.libraryback.service.RoleService;
+import com.example.libraryback.payload.api.ApiResult;
+import com.example.libraryback.service.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 

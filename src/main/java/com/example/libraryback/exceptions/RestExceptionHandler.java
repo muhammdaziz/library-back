@@ -1,7 +1,7 @@
 package com.example.libraryback.exceptions;
 
-import com.example.libraryback.payload.ApiResult;
-import com.example.libraryback.payload.ErrorData;
+import com.example.libraryback.payload.api.ApiResult;
+import com.example.libraryback.payload.api.ErrorData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -17,22 +17,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(value = RestException.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(RestException ex) {
+
         log.error("Exception: ",ex);
-        ApiResult<List<ErrorData>> result =
-                ApiResult.failResponse(ex.getMessage(),
-                        ex.getStatus().value());
+
+        ApiResult<List<ErrorData>> result = ApiResult
+                .failResponse(ex.getMessage(), ex.getStatus().value());
+
         return new ResponseEntity<>(result, ex.getStatus());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(
-            MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(MethodArgumentNotValidException ex) {
+
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
         List<ErrorData> errorDataList = new ArrayList<>();
@@ -44,50 +46,57 @@ public class RestExceptionHandler {
                             fieldError.getField()));
 
         ApiResult<List<ErrorData>> apiResult = ApiResult.failResponse(errorDataList);
+
         return new ResponseEntity<>(apiResult, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = EmptyResultDataAccessException.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(EmptyResultDataAccessException ex) {
-        ApiResult<List<ErrorData>> result =
-                ApiResult.failResponse(ex.getMessage(),
-                        HttpStatus.NOT_FOUND.value());
+
+        ApiResult<List<ErrorData>> result = ApiResult
+                .failResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+
         return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
 
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(AccessDeniedException ex) {
-        ApiResult<List<ErrorData>> apiResult = ApiResult.failResponse(
-                "Huquqingiz yo'q okasi",
-                HttpStatus.FORBIDDEN.value());
+
+        ApiResult<List<ErrorData>> apiResult = ApiResult
+                .failResponse("Huquqingiz yo'q okasi", HttpStatus.FORBIDDEN.value());
+
         return new ResponseEntity<>(apiResult, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = InsufficientAuthenticationException.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(InsufficientAuthenticationException ex) {
-        ApiResult<List<ErrorData>> apiResult = ApiResult.failResponse(
-                "Full authentication is required to access this resource",
-                HttpStatus.UNAUTHORIZED.value());
+
+        ApiResult<List<ErrorData>> apiResult = ApiResult
+                .failResponse("Full authentication is required to access this resource", HttpStatus.UNAUTHORIZED.value());
+
         return new ResponseEntity<>(apiResult, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(Exception ex) {
-        System.out.println(Thread.currentThread().getName());
+
         log.error("Exception: ",ex);
-        ApiResult<List<ErrorData>> apiResult = ApiResult.failResponse(
-                ex.getMessage(),
-                HttpStatus.CONFLICT.value());
+
+        ApiResult<List<ErrorData>> apiResult = ApiResult
+                .failResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
+
         return new ResponseEntity<>(apiResult, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = AccountStatusException.class)
     public ResponseEntity<ApiResult<List<ErrorData>>> exceptionHandle(AccountStatusException ex) {
+
         log.error("Exception: ",ex);
-        ApiResult<List<ErrorData>> apiResult = ApiResult.failResponse(
-                ex.getMessage(),
-                HttpStatus.UNAUTHORIZED.value());
+
+        ApiResult<List<ErrorData>> apiResult = ApiResult
+                .failResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+
         return new ResponseEntity<>(apiResult, HttpStatus.UNAUTHORIZED);
     }
 

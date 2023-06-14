@@ -1,6 +1,5 @@
 package com.example.libraryback.repository;
 
-
 import com.example.libraryback.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 

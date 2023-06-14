@@ -9,29 +9,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
     private UUID id;
 
+    private String role;
+
     private String email;
 
-    private String firstname;
+    private boolean enabled;
 
     private String lastname;
 
-    private boolean enabled;
+    private String firstname;
 
     private List<PageEnum> pages;
 
     private Set<PermissionEnum> permissions;
-
-    private String role;
 
 }
 

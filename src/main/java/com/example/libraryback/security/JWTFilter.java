@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
     @Value("${jwt.access.key}")
     private String TOKEN_KEY;
@@ -38,16 +38,20 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     private void setSecurityContext(HttpServletRequest request) {
-        String authorization = request.getHeader(RestConstants.AUTHENTICATION_HEADER);
-        if (Objects.nonNull(authorization) && authorization.startsWith("Bearer")) {
 
+        String authorization = request.getHeader(RestConstants.AUTHENTICATION_HEADER);
+
+        if (Objects.nonNull(authorization) && authorization.startsWith("Bearer")) {
             authorization = authorization.substring(6).trim();
 
             String email = getEmailFromToken(authorization);
+
             if (!email.isEmpty()) {
                 Optional<User> optionalUser = userRepository.findByEmail(email);
+
                 if (optionalUser.isPresent()) {
                     User user = optionalUser.get();
+
                     if (user.isEnabled()
                             && user.isAccountNonExpired()
                             && user.isAccountNonLocked()
@@ -58,8 +62,7 @@ public class JWTFilter extends OncePerRequestFilter {
                                         new UsernamePasswordAuthenticationToken(
                                                 user,
                                                 null,
-                                                user.getAuthorities()
-                                        ));
+                                                user.getAuthorities()));
                 }
             }
         }
@@ -67,6 +70,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private String getEmailFromToken(String authorization) {
         String email = "";
+
         try {
             email = Jwts
                     .parser()
@@ -85,6 +89,7 @@ public class JWTFilter extends OncePerRequestFilter {
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty.");
         }
+
         return email;
     }
 }

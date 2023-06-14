@@ -1,7 +1,6 @@
-package com.example.libraryback.service;
+package com.example.libraryback.service.role;
 
-
-import com.example.libraryback.payload.ApiResult;
+import com.example.libraryback.payload.api.ApiResult;
 
 import java.util.UUID;
 

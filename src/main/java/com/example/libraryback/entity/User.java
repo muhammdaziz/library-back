@@ -1,9 +1,6 @@
 package com.example.libraryback.entity;
 
-import com.example.libraryback.entity.template.AbsUuid;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +14,10 @@ import java.util.UUID;
 @Getter
 @Entity
 @Setter
-@Table(name = "users")
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "users")
 public class User  implements UserDetails {
 
     @Id
@@ -26,22 +25,32 @@ public class User  implements UserDetails {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    private String firstname;
-
-    private String lastname;
-
     @Column(nullable = false, unique = true)
     private String email;
+
+    @ManyToOne
+    private Role role;
+
+    private boolean enabled;
 
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    private Role role;
-    private boolean enabled;
+    private String lastname;
+
+    @Column(nullable = false)
+    private String firstname;
+
     private boolean accountNonExpired;
+
     private boolean accountNonLocked;
+
     private boolean credentialsNonExpired;
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
     public User(String email, String password) {
         this.email = email;
@@ -49,16 +58,12 @@ public class User  implements UserDetails {
         accountNonExpired = accountNonLocked = credentialsNonExpired = true;
         enabled = false;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (Objects.isNull(role))
             return new ArrayList<>();
         return role.getPermissions();
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
     }
 
 }

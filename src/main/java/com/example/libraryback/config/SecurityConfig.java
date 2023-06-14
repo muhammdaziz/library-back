@@ -19,19 +19,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    private final MyEntryPointHandler myEntryPointHandler;
-
     private final JWTFilter jwtFilter;
+
+    private final MyEntryPointHandler myEntryPointHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,43 +40,41 @@ public class SecurityConfig {
                 .and()
                 .csrf()
                 .disable()
-                .authorizeHttpRequests(
-                        auth ->
-                                auth
-                                        .antMatchers(RestConstants.OPEN_PAGES)
-                                        .permitAll()
-                                        .antMatchers(HttpMethod.OPTIONS)
-                                        .permitAll()
-                                        .antMatchers("/",
-                                                "/favicon.ico",
-                                                "//*.png",
-                                                "//*.gif",
-                                                "//*.svg",
-                                                "//*.jpg",
-                                                "//*.html",
-                                                "//*.css",
-                                                "//*.js",
-                                                "/swagger-ui.html",
-                                                "/swagger-resources/",
-                                                "/v2/",
-                                                "/csrf",
-                                                "/webjars/",
-                                                "/v2/api-docs",
-                                                "/configuration/ui")
-                                        .permitAll()
-                                        .antMatchers("/api/**")
-                                        .authenticated())
+                .authorizeHttpRequests(auth ->
+                        auth
+                                .antMatchers("/",
+                                        "/favicon.ico",
+                                        "//*.png",
+                                        "//*.gif",
+                                        "//*.svg",
+                                        "//*.jpg",
+                                        "//*.html",
+                                        "//*.css",
+                                        "//*.js",
+                                        "/swagger-ui.html",
+                                        "/swagger-resources/",
+                                        "/v2/",
+                                        "/csrf",
+                                        "/webjars/",
+                                        "/v2/api-docs",
+                                        "/configuration/ui")
+                                .permitAll()
+                                .antMatchers(RestConstants.OPEN_PAGES)
+                                .permitAll()
+                                .antMatchers("/api/**")
+                                .authenticated()
+                                .antMatchers(HttpMethod.OPTIONS)
+                                .permitAll()
+                )
                 .exceptionHandling()
                 .authenticationEntryPoint(myEntryPointHandler)
                 .and()
-//                .rememberMe()
-//                .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
