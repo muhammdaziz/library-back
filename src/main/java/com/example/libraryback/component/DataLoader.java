@@ -1,9 +1,11 @@
 package com.example.libraryback.component;
 
+import com.example.libraryback.entity.FileImg;
 import com.example.libraryback.entity.Role;
 import com.example.libraryback.entity.User;
 import com.example.libraryback.entity.enums.PermissionEnum;
 import com.example.libraryback.entity.enums.RoleEnum;
+import com.example.libraryback.repository.FileRepository;
 import com.example.libraryback.repository.RoleRepository;
 import com.example.libraryback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +34,8 @@ public class DataLoader implements CommandLineRunner {
 
     private final String superAdminPassword = "123";
     private final String superAdminUsername = "superAdmin@admin.com";
+
+    private final FileRepository fileRepository;
 
     @Override
     public void run(String... args) {
@@ -68,6 +73,12 @@ public class DataLoader implements CommandLineRunner {
 
             roleRepository.save(roleADMIN);
 
+            FileImg fileImg = fileRepository.save(new FileImg(
+                    UUID.fromString("12345678-1234-1234-1234-123456789013"),
+                    "/dw ewrw erew werewr",
+                    "dsdssds"
+            ));
+
             User superAdmin = User
                     .builder()
                     .enabled(true)
@@ -76,15 +87,23 @@ public class DataLoader implements CommandLineRunner {
                     .role(roleSuperAdmin)
                     .email(superAdminUsername)
                     .password(passwordEncoder.encode(superAdminPassword))
+                    .avatar(fileImg)
                     .build();
 
             userRepository.save(superAdmin);
+
+            fileImg = fileRepository.save(new FileImg(
+                    UUID.fromString("12345678-1234-1234-1234-123456789012"),
+                    "/dw ewrw erew werewr",
+                    "dsdssds"
+            ));
 
             User admin = User
                     .builder()
                     .enabled(true)
                     .role(roleADMIN)
                     .lastname("Just")
+                    .avatar(fileImg)
                     .firstname("Admin")
                     .email(adminUsername)
                     .password(passwordEncoder.encode(adminPassword))

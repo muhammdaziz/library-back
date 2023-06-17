@@ -1,21 +1,44 @@
 package com.example.libraryback.exceptions;
 
-import lombok.Getter;
+import com.example.libraryback.payload.api.ErrorData;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 
-@Getter
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class RestException extends RuntimeException {
 
-    private final String message;
+    private String userMsg;
+    private HttpStatus status;
+    private List<ErrorData> errors;
 
-    private final HttpStatus status;
+    private String resourceName;
+    private String fieldName;
+    private Object fieldValue;
 
-    public RestException(String message, HttpStatus status) {
-        this.message = message;
+    public RestException(String userMsg, HttpStatus status) {
+        super(userMsg);
+        this.userMsg = userMsg;
         this.status = status;
     }
 
-    public static RestException restThrow(String message, HttpStatus status) {
-        return new RestException(message, status);
+    private RestException(HttpStatus status, List<ErrorData> errors) {
+        this.status = status;
+        this.errors = errors;
+    }
+
+    public static RestException restThrow(String userMsg, HttpStatus httpStatus) {
+        return new RestException(userMsg, httpStatus);
+    }
+
+    public static RestException restThrow(String userMsg) {
+        return new RestException(userMsg, HttpStatus.BAD_REQUEST);
+    }
+
+    public static RestException restThrow(List<ErrorData> errors, HttpStatus status) {
+        return new RestException(status, errors);
     }
 }

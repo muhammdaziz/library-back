@@ -1,7 +1,10 @@
 package com.example.libraryback.payload.genre;
 
 import com.example.libraryback.entity.Genre;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +12,7 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenreDTO {
 
     private Integer id;

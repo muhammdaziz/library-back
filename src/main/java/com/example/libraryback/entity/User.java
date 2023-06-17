@@ -31,6 +31,11 @@ public class User  implements UserDetails {
     @ManyToOne
     private Role role;
 
+    private String bio;
+
+    @OneToOne(optional = false)
+    private FileImg avatar;
+
     private boolean enabled;
 
     @Column(nullable = false)

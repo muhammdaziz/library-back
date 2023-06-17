@@ -7,7 +7,6 @@ import com.example.libraryback.service.offer.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.Id;
 import java.util.List;
 import java.util.UUID;
 

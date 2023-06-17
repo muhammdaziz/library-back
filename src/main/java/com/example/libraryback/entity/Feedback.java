@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -12,20 +13,22 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"book_id"}))
-public class Offer {
+public class Feedback {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne(optional = false)
-    private Book book;
+    @Column(nullable = false)
+    private Date date;
 
     @ManyToOne(optional = false)
-    private FileImg backgroundImg;
+    private User user;
 
     @Column(nullable = false)
-    private Long orderNum;
+    private Integer point;
+
+    @Column(columnDefinition = "text")
+    private String message;
 }

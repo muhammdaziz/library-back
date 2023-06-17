@@ -3,7 +3,7 @@ package com.example.libraryback.controller;
 import com.example.libraryback.entity.User;
 import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.UserDTO;
-import com.example.libraryback.utils.CurrentUser;
+import com.example.libraryback.security.CurrentUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 

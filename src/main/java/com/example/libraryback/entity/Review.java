@@ -1,7 +1,6 @@
 package com.example.libraryback.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,7 +10,9 @@ import java.util.UUID;
 @Entity
 @Setter
 @Getter
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "book_id"}))
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Review {
 
     @Id

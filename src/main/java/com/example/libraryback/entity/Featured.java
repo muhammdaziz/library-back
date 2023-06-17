@@ -4,22 +4,22 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @Setter
 @Getter
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "genre_id"}))
-public class BookGenre {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"book_id"}))
+public class Featured {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @ManyToOne
+    @OneToOne(optional = false)
     private Book book;
 
-    @ManyToOne
-    private Genre genre;
+    @Column(nullable = false)
+    private Long orderNum;
 }

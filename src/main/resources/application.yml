@@ -10,8 +10,8 @@ spring:
             max-request-size: 250MB
     datasource:
         url: jdbc:postgresql://localhost:5432/library
-#        username: postgres
-#        password: 11
+        username: postgres
+        password: 11
     jpa:
         hibernate:
             ddl-auto: update
@@ -39,3 +39,10 @@ jwt:
     refresh:
         key: tHaX54Hwk^YdfdsMzK-d@e@&p7#%70OZ()BK8C1%T&hBnrzgqK287
         expiration-time: 604800000
+
+
+app:
+    admin:
+        email: "rootUser@gmail.com"
+        phoneNumber: "+998991234567"
+        password: root_123

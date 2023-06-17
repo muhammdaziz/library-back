@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDTO {
+public class UserDTO2 {
 
     private UUID id;
 
@@ -23,36 +23,26 @@ public class UserDTO {
 
     private UUID avatar;
 
-    private RoleDTO role;
-
     private String email;
-
-    private boolean enabled;
 
     private String lastname;
 
     private String firstname;
 
-    private Set<PermissionEnum> permissions;
 
-    public static UserDTO mapUserDTO(User user) {
-        return UserDTO.builder()
+    public static UserDTO2 mapUserDTO(User user) {
+        return UserDTO2.builder()
                 .id(user.getId())
                 .bio(user.getBio())
                 .email(user.getEmail())
-                .enabled(user.isEnabled())
                 .lastname(user.getLastname())
                 .firstname(user.getFirstname())
                 .avatar(user.getAvatar().getId())
-                .role(RoleDTO.map(user.getRole()))
-                .permissions(user.getRole().getPermissions())
                 .build();
     }
 
-    public static Set<UserDTO> mapUserDTO(Set<User> users) {
-        return users.stream()
-                .map(UserDTO::mapUserDTO)
-                .collect(Collectors.toSet());
+    public static Set<UserDTO2> mapUserDTO(Set<User> users) {
+        return users.stream().map(UserDTO2::mapUserDTO).collect(Collectors.toSet());
     }
 }
 

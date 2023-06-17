@@ -1,7 +1,6 @@
 package com.example.libraryback.entity;
 
 import com.example.libraryback.entity.enums.PermissionEnum;
-import com.example.libraryback.entity.template.AbsUuid;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

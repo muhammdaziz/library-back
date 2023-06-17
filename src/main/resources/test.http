@@ -39,4 +39,31 @@ Content-Type: application/json
 }
 
 ###
-http://localhost:8090/api/promotion
+POST http://localhost:8090/api/feedback
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdXBlckFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY4NjkyODI4OSwiZXhwIjoxNjg3MDAwMjg5fQ.46uhoioaTFavVEwor-XmkSNzsunhSdArJQt6HF3Q0K-AzVM2vd8DtiB_pWVuYeaTZJy3mgtkdVXxPT9pbEwSQA
+
+{
+  "message": "asdssdsf",
+  "point": 2
+}
+
+
+###
+POST http://localhost:8090/api/v1/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "superAdmin@admin.com",
+  "password": "123"
+}
+
+
+###
+GET http://localhost:8090/api/book
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdXBlckFkbWluQGFkbWluLmNvbSIsImlhdCI6MTY4NjkyODQ1NCwiZXhwIjoxNjg3MDAwNDU0fQ.J_NhBkCZrCqsh1ZD4f79KFhFzKISczprA3OpeuFMPVn9VV_F7o_oQl4L8Jj8BXJz8P0UO2u9PS8uHfiHW7TnSA
+
+
+###
+GET http://localhost:8090/api/user/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3YWI0MjAxNi0xNmYwLTQ1ODYtYTM5YmEyM2ItODI3ZC00MDJlLTkzMmItODM2ZDNiOGY2ZTYyLWJlNDQtZmNiMTFlMGYyMmNhIiwiaWF0IjoxNjg3MDE0NzM2LCJleHAiOjE2ODcwODY3MzZ9.0zwGIBcmCyJ6YOhS6jtgXS3k6dlSuseBbNWs-CN_LMw

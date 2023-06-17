@@ -4,81 +4,81 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResult<E> {
-
-    private E data;
-
+public class ApiResult<T> implements Serializable {
+    private Boolean success = false;
     private String message;
-
-    private boolean success;
-
+    private T data;
     private List<ErrorData> errors;
 
-    private ApiResult() {
-        this.success = true;
+
+    //RESPONSE WITH BOOLEAN (SUCCESS OR FAIL)
+    private ApiResult(Boolean success) {
+        this.success = success;
     }
 
-    private ApiResult(E data) {
+
+    //SUCCESS RESPONSE WITH DATA
+    private ApiResult(T data, Boolean success) {
         this.data = data;
-        this.success = true;
+        this.success = success;
     }
 
-    private ApiResult(String message, E data) {
+    //SUCCESS RESPONSE WITH DATA AND MESSAGE
+    private ApiResult(T data, Boolean success, String message) {
         this.data = data;
-        this.success = true;
+        this.success = success;
         this.message = message;
     }
 
+    //SUCCESS RESPONSE WITH MESSAGE
+    private ApiResult(String message) {
+        this.message = message;
+        this.success = Boolean.TRUE;
+    }
+
+    //ERROR RESPONSE WITH MESSAGE AND ERROR CODE
+    private ApiResult(String errorMsg, Integer errorCode) {
+        this.success = false;
+        this.errors = Collections.singletonList(new ErrorData(errorMsg, errorCode));
+    }
+
+    //ERROR RESPONSE WITH ERROR DATA LIST
     private ApiResult(List<ErrorData> errors) {
+        this.success = false;
         this.errors = errors;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-
-        if (!(o instanceof ApiResult<?> that))
-            return false;
-
-        return this.isSuccess() == that.isSuccess() &&
-                Objects.equals(this.getData(), that.getData()) &&
-                Objects.equals(this.getErrors(), that.getErrors()) &&
-                Objects.equals(this.getMessage(), that.getMessage());
+    public static <E> ApiResult<E> successResponse(E data) {
+        return new ApiResult<>(data, true);
     }
 
-    public static <T> ApiResult<T> successResponse() {
-        return new ApiResult<>();
+    public static <E> ApiResult<E> successResponse(E data, String message) {
+        return new ApiResult<>(data, true, message);
     }
 
-    public static <T> ApiResult<T> successResponse(T data) {
-        return new ApiResult<>(data);
+    public static <E> ApiResult<E> successResponse() {
+        return new ApiResult<>(true);
     }
 
-    public static <T> ApiResult<T> successResponse(String message) {
-        return new ApiResult<>(message, null);
-    }
-
-    public static <T> ApiResult<T> successResponse(String message, T data) {
-        return new ApiResult<>(message, data);
+    public static ApiResult<String> successResponse(String message) {
+        return new ApiResult<>(message);
     }
 
 
-    public static ApiResult<List<ErrorData>> failResponse(List<ErrorData> errors) {
+    public static ApiResult<ErrorData> errorResponse(String errorMsg, Integer errorCode) {
+        return new ApiResult<>(errorMsg, errorCode);
+    }
+
+    public static ApiResult<ErrorData> errorResponse(List<ErrorData> errors) {
         return new ApiResult<>(errors);
     }
 
-    public static ApiResult<List<ErrorData>> failResponse(String msg, Integer code) {
-
-        List<ErrorData> errorDataList = List.of(new ErrorData(msg, code));
-
-        return failResponse(errorDataList);
-    }
 
 }
