@@ -3,6 +3,7 @@ package com.example.libraryback.controller;
 import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.book.BookAddDTO;
 import com.example.libraryback.payload.book.BookDTO;
+import com.example.libraryback.payload.book.SearchDTO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,9 @@ public interface BookController {
 
     @GetMapping("/{id}")
     ApiResult<BookDTO> get(@PathVariable UUID id);
+
+    @GetMapping("/search")
+    ApiResult<SearchDTO> search(@RequestParam String search);
 
     @PostMapping(consumes = { "multipart/form-data" })
     ApiResult<BookDTO> add(@ModelAttribute BookAddDTO bookAddDTO);

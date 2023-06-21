@@ -57,7 +57,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ApiResult<AuthorDTO> add(AuthorAddDTO authorAddDTO) {
 
-        Author author = mapAuthor(authorAddDTO);
+        Author author = new Author();
+
+        mapAuthor(authorAddDTO, author);
 
         if (authorAddDTO.getAvatar() != null)
             try {
@@ -82,9 +84,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ApiResult<AuthorDTO> edit(Integer id, AuthorAddDTO authorAddDTO) {
 
-        checkExist(id);
+        Author author = checkExist(id);
 
-        Author author = mapAuthor(authorAddDTO);
+        author = mapAuthor(authorAddDTO, author);
 
         author.setId(id);
 
@@ -128,13 +130,12 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
     }
 
-    private Author mapAuthor(AuthorAddDTO authorAddDTO) {
+    private Author mapAuthor(AuthorAddDTO authorAddDTO, Author author) {
 
-        return Author
-                .builder()
-                .lastname(authorAddDTO.getLastname())
-                .firstname(authorAddDTO.getFirstname())
-                .build();
+        author.setLastname(authorAddDTO.getLastname());
+        author.setFirstname(authorAddDTO.getFirstname());
+
+        return author;
     }
 
     private List<AuthorDTO> mapAuthorDTO(List<Author> authors) {

@@ -6,15 +6,19 @@ import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.author.AuthorDTO;
 import com.example.libraryback.payload.book.BookAddDTO;
 import com.example.libraryback.payload.book.BookDTO;
+import com.example.libraryback.payload.book.SearchDTO;
 import com.example.libraryback.payload.discount.DiscountDTO;
 import com.example.libraryback.repository.*;
 import com.example.libraryback.service.io.IOService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,6 +66,23 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public ApiResult<SearchDTO> search(String value) {
+//        Page<Book> books = bookRepository.search(value, PageRequest.of(0, 10));
+        Page<Book> books = bookRepository.findByTitleContainingIgnoreCaseOrPublisherContainingIgnoreCase(value, value, PageRequest.of(0, 10));
+
+
+        return ApiResult
+                .successResponse(mapSearch(books.toList()));
+    }
+
+    private SearchDTO mapSearch(List<Book> books) {
+        return SearchDTO
+                .builder()
+                .books(mapBookDTO(books))
+                .build();
+    }
+
+    @Override
     public ApiResult<BookDTO> add(BookAddDTO bookAddDTO){
 
         checkAuthorExist(bookAddDTO.getAuthorId());
@@ -70,7 +91,9 @@ public class BookServiceImpl implements BookService {
 
         checkExistByTitleAndAuthorId(bookAddDTO.getTitle(), bookAddDTO.getAuthorId());
 
-        Book book = mapBook(bookAddDTO);
+        Book book = new Book();
+
+        mapBook(bookAddDTO, book);
 
         try {
             book.setDocument(
@@ -103,31 +126,31 @@ public class BookServiceImpl implements BookService {
     @Override
     public ApiResult<BookDTO> edit(UUID id, BookAddDTO bookAddDTO){
 
-        checkExist(id);
+        Book book = checkExist(id);
 
-        Book book = mapBook(bookAddDTO);
+        mapBook(bookAddDTO, book);
 
         book.setId(id);
 
-//        try {
-//            if (!Objects.isNull(bookAddDTO.getImage()))
-//                book.setImage(
-//                        ioService
-//                                .upload(
-//                                        bookAddDTO.getImage(),
-//                                        true)
-//                );
-//
-//            if (!Objects.isNull(bookAddDTO.getDocument()))
-//                book.setDocument(
-//                        ioService
-//                                .upload(
-//                                        bookAddDTO.getDocument(),
-//                                        false)
-//                );
-//            } catch (IOException e) {
-//                throw new RestException("COULD NOT SAVE IMAGE", HttpStatus.CONFLICT);
-//            }
+        try {
+            if (!Objects.isNull(bookAddDTO.getImage()))
+                book.setImage(
+                        ioService
+                                .upload(
+                                        bookAddDTO.getImage(),
+                                        true)
+                );
+
+            if (!Objects.isNull(bookAddDTO.getDocument()))
+                book.setDocument(
+                        ioService
+                                .upload(
+                                        bookAddDTO.getDocument(),
+                                        false)
+                );
+            } catch (IOException e) {
+                throw new RestException("COULD NOT SAVE IMAGE", HttpStatus.CONFLICT);
+            }
 
         bookRepository.save(book);
 
@@ -237,12 +260,12 @@ public class BookServiceImpl implements BookService {
                 );
     }
 
-    private Float getPoints(UUID bookId) {
+    private Double getPoints(UUID bookId) {
 
         List<Review> reviews = reviewRepository.findAllByBookId(bookId);
 
         if (reviews.size() == 0)
-            return 0F;
+            return 0.0;
 
         final Float[] count = {0F};
 
@@ -250,7 +273,13 @@ public class BookServiceImpl implements BookService {
                 count[0] += review.getPoint()
         );
 
-        return count[0] / reviews.size();
+        double res = count[0] / reviews.size();
+
+        res = res * Math.pow(10, 1);
+        res = Math.floor(res);
+        res = res / Math.pow(10, 1);
+
+        return res;
     }
 
 
@@ -283,20 +312,18 @@ public class BookServiceImpl implements BookService {
         return reviewRepository.countByBookId(bookId);
     }
 
-    private Book mapBook(BookAddDTO bookAddDTO) {
+    private void mapBook(BookAddDTO bookAddDTO, Book book) {
 
-        return Book
-                .builder()
-                .isbn(bookAddDTO.getIsbn())
-                .price(bookAddDTO.getPrice())
-                .title(bookAddDTO.getTitle())
-                .language(bookAddDTO.getLanguage())
-                .publisher(bookAddDTO.getPublisher())
-                .description(bookAddDTO.getDescription())
-                .author(getAuthor(bookAddDTO.getAuthorId()))
-                .editionFormat(bookAddDTO.getEditionFormat())
-                .publishedDate(bookAddDTO.getPublishedDate())
-                .build();
+        book.setIsbn(bookAddDTO.getIsbn());
+        book.setPrice(bookAddDTO.getPrice());
+        book.setTitle(bookAddDTO.getTitle());
+        book.setLanguage(bookAddDTO.getLanguage());
+        book.setPublisher(bookAddDTO.getPublisher());
+        book.setDescription(bookAddDTO.getDescription());
+        book.setAuthor(getAuthor(bookAddDTO.getAuthorId()));
+        book.setEditionFormat(bookAddDTO.getEditionFormat());
+        book.setPublishedDate(bookAddDTO.getPublishedDate());
+
     }
 
     private void checkAuthorExist(Integer authorId) {

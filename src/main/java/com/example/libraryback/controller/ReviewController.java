@@ -4,6 +4,8 @@ import com.example.libraryback.entity.User;
 import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.review.ReviewAddDTO;
 import com.example.libraryback.payload.review.ReviewDTO;
+import com.example.libraryback.payload.review.ReviewDTOList;
+import com.example.libraryback.payload.review.ReviewsDTO;
 import com.example.libraryback.security.CurrentUser;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +16,17 @@ import java.util.UUID;
 @RequestMapping("/api/review")
 public interface ReviewController {
 
-    @GetMapping()
-    ApiResult<List<ReviewDTO>> get();
+    @GetMapping("/{size}/{page}")
+    ApiResult<ReviewsDTO> get(@PathVariable Integer size, @PathVariable Integer page);
 
     @DeleteMapping("/{id}")
     ApiResult<?> delete(@PathVariable UUID id);
 
     @GetMapping("/{id}")
     ApiResult<ReviewDTO> get(@PathVariable UUID id);
+
+    @GetMapping("/book-review/{bookId}")
+    ApiResult<List<ReviewDTOList>> getBookReview(@PathVariable UUID bookId);
 
     @PostMapping()
     ApiResult<ReviewDTO> add(@NotNull @ModelAttribute ReviewAddDTO reviewAddDTO, @CurrentUser User user);

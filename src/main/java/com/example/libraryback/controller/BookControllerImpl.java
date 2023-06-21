@@ -3,6 +3,7 @@ package com.example.libraryback.controller;
 import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.book.BookAddDTO;
 import com.example.libraryback.payload.book.BookDTO;
+import com.example.libraryback.payload.book.SearchDTO;
 import com.example.libraryback.service.book.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,11 @@ public class BookControllerImpl implements BookController {
     @Override
     public ApiResult<BookDTO> get(UUID id){
         return bookService.get(id);
+    }
+
+    @Override
+    public ApiResult<SearchDTO> search(String search) {
+        return bookService.search(search);
     }
 
     @Override

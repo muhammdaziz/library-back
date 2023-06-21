@@ -77,7 +77,9 @@ public class OfferServiceImpl implements OfferService {
 
         checkExistByBook(offerAddDTO.getBookId());
 
-        Offer offer = mapOffer(offerAddDTO);
+        Offer offer = new Offer();
+
+        mapOffer(offerAddDTO, offer);
 
         try {
             offer.setBackgroundImg(
@@ -100,11 +102,11 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public ApiResult<OfferDTO> edit(UUID id, OfferAddDTO offerAddDTO) {
 
-        checkExist(id);
+        Offer offer = checkExist(id);
 
         checkExistByBookNotId(offerAddDTO.getBookId(), id);
 
-        Offer offer = mapOffer(offerAddDTO);
+        mapOffer(offerAddDTO, offer);
 
         offer.setId(id);
 
@@ -159,15 +161,12 @@ public class OfferServiceImpl implements OfferService {
                 .build();
     }
 
-    private Offer mapOffer(OfferAddDTO offerAddDTO) {
+    private void mapOffer(OfferAddDTO offerAddDTO, Offer offer) {
 
         Date date = new Date();
 
-        return Offer
-                .builder()
-                .orderNum(date.getTime())
-                .book(bookService.getBookById(offerAddDTO.getBookId()))
-                .build();
+        offer.setOrderNum(date.getTime());
+        offer.setBook(bookService.getBookById(offerAddDTO.getBookId()));
     }
 
     private List<OfferDTO> mapOfferDTO(List<Offer> offers) {

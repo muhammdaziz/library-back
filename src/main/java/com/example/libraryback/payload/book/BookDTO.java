@@ -22,7 +22,7 @@ public class BookDTO {
     private Float price;
     private String isbn;
     private String title;
-    private Float points;
+    private Double points;
     private UUID document;
     private String language;
     private AuthorDTO author;

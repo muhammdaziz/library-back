@@ -57,7 +57,9 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public ApiResult<PromotionDTO> add(PromotionAddDTO promotionAddDTO) {
 
-        Promotion promotion = mapPromo(promotionAddDTO);
+        Promotion promotion = new Promotion();
+
+        mapPromo(promotionAddDTO, promotion);
 
         try {
             promotion.setBackgroundImage(
@@ -80,11 +82,9 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public ApiResult<PromotionDTO> edit(Integer id, PromotionAddDTO promotionAddDTO) {
 
-        checkExist(id);
+        Promotion promotion = checkExist(id);
 
-        Promotion promotion = mapPromo(promotionAddDTO);
-
-        promotion.setId(id);
+        mapPromo(promotionAddDTO, promotion);
 
         if (!Objects.isNull(promotionAddDTO.getBackgroundImage()))
             try {
@@ -130,17 +130,14 @@ public class PromotionServiceImpl implements PromotionService {
                 .build();
     }
 
-    private Promotion mapPromo(PromotionAddDTO promotionAddDTO) {
+    private void mapPromo(PromotionAddDTO promotionAddDTO, Promotion promotion) {
 
-        return Promotion
-                .builder()
-                .btn1(promotionAddDTO.getBtn1())
-                .btn2(promotionAddDTO.getBtn2())
-                .title(promotionAddDTO.getTitle())
-                .header(promotionAddDTO.getHeader())
-                .subtitle(promotionAddDTO.getSubtitle())
-                .description(promotionAddDTO.getDescription())
-                .build();
+        promotion.setBtn1(promotionAddDTO.getBtn1());
+        promotion.setBtn2(promotionAddDTO.getBtn2());
+        promotion.setTitle(promotionAddDTO.getTitle());
+        promotion.setHeader(promotionAddDTO.getHeader());
+        promotion.setSubtitle(promotionAddDTO.getSubtitle());
+        promotion.setDescription(promotionAddDTO.getDescription());
     }
 
     private List<PromotionDTO> mapPromoDTO(List<Promotion> promotions) {

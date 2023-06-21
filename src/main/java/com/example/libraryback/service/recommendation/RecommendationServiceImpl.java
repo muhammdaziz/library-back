@@ -73,7 +73,9 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         checkBooksAreExist(recommendationAddDTO.getBooks());
 
-        Recommendation recommendation = mapRecommendation(recommendationAddDTO);
+        Recommendation recommendation = new Recommendation();
+
+        mapRecommendation(recommendationAddDTO, recommendation);
 
         try {
             recommendation.setBackgroundImage(
@@ -121,15 +123,13 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public ApiResult<RecommendationDTO> edit(Integer id, RecommendationAddDTO recommendationAddDTO){
 
-        checkExist(id);
+        Recommendation recommendation = checkExist(id);
 
         checkExistByTitleNotId(id, recommendationAddDTO.getTitle());
 
         checkBooksAreExist(recommendationAddDTO.getBooks());
 
-        Recommendation recommendation = mapRecommendation(recommendationAddDTO);
-
-        recommendation.setId(id);
+        mapRecommendation(recommendationAddDTO, recommendation);
 
         if (!Objects.isNull(recommendationAddDTO.getBackgroundImage()))
             try {
@@ -191,13 +191,10 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .build();
     }
 
-    private Recommendation mapRecommendation(RecommendationAddDTO recommendationAddDTO) {
+    private void mapRecommendation(RecommendationAddDTO recommendationAddDTO, Recommendation recommendation) {
 
-        return Recommendation
-                .builder()
-                .title(recommendationAddDTO.getTitle())
-                .subtitle(recommendationAddDTO.getSubtitle())
-                .build();
+        recommendation.setTitle(recommendationAddDTO.getTitle());
+        recommendation.setSubtitle(recommendationAddDTO.getSubtitle());
     }
 
     private List<RecommendationDTO> mapRecommendationDTO(List<Recommendation> recommendations) {

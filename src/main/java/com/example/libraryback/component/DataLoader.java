@@ -3,6 +3,7 @@ package com.example.libraryback.component;
 import com.example.libraryback.entity.FileImg;
 import com.example.libraryback.entity.Role;
 import com.example.libraryback.entity.User;
+import com.example.libraryback.entity.Website;
 import com.example.libraryback.entity.enums.PermissionEnum;
 import com.example.libraryback.entity.enums.RoleEnum;
 import com.example.libraryback.repository.FileRepository;
@@ -110,6 +111,21 @@ public class DataLoader implements CommandLineRunner {
                     .build();
 
             userRepository.save(admin);
+
+            fileImg = fileRepository.save(new FileImg(
+                    UUID.fromString("12345678-1234-1234-1234-123456789013"),
+                    "src/main/resources/logo.png",
+                    "logo"
+            ));
+
+            Website website = Website
+                    .builder()
+                    .name("Bookoe")
+                    .subtitle("Book Store Website")
+                    .logo(fileImg)
+                    .build();
+
+
         }
     }
 

@@ -4,8 +4,11 @@ import com.example.libraryback.entity.User;
 import com.example.libraryback.payload.api.ApiResult;
 import com.example.libraryback.payload.review.ReviewAddDTO;
 import com.example.libraryback.payload.review.ReviewDTO;
+import com.example.libraryback.payload.review.ReviewDTOList;
+import com.example.libraryback.payload.review.ReviewsDTO;
 import com.example.libraryback.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,13 +26,18 @@ public class ReviewControllerImpl implements ReviewController {
     }
 
     @Override
-    public ApiResult<List<ReviewDTO>> get(){
-        return reviewService.get();
+    public ApiResult<ReviewsDTO> get(Integer size, Integer page){
+        return reviewService.get(size, page);
     }
 
     @Override
     public ApiResult<ReviewDTO> get(UUID id){
         return reviewService.get(id);
+    }
+
+    @Override
+    public ApiResult<List<ReviewDTOList>> getBookReview(UUID bookId) {
+        return reviewService.getBookReview(bookId);
     }
 
     @Override

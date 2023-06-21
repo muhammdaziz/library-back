@@ -13,4 +13,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     Integer countByBookId(UUID bookId);
 
     List<Review> findAllByBookId(UUID bookId);
+
+    boolean existsByBookIdAndUserId(UUID bookId, UUID userId);
 }

@@ -58,7 +58,9 @@ public class ServiceServiceImpl implements ServiceService {
 
         checkExistByTitle(serviceAddDTO.getTitle());
 
-        Services service = mapService(serviceAddDTO);
+        Services service = new Services();
+
+        mapService(serviceAddDTO, service);
 
         try {
             service.setImage(
@@ -81,13 +83,11 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public ApiResult<ServiceDTO> edit(Integer id, ServiceAddDTO serviceAddDTO){
 
-        checkExist(id);
+        Services service = checkExist(id);
 
         checkExistByTitleNotId(serviceAddDTO.getTitle(), id);
 
-        Services service = mapService(serviceAddDTO);
-
-        service.setId(id);
+        mapService(serviceAddDTO, service);
 
         if (!Objects.isNull(serviceAddDTO.getImage()))
             try {
@@ -134,13 +134,10 @@ public class ServiceServiceImpl implements ServiceService {
                 .build();
     }
 
-    private Services mapService(ServiceAddDTO serviceAddDTO) {
+    private void mapService(ServiceAddDTO serviceAddDTO, Services service) {
 
-        return Services
-                .builder()
-                .title(serviceAddDTO.getTitle())
-                .subtitle(serviceAddDTO.getSubtitle())
-                .build();
+        service.setTitle(serviceAddDTO.getTitle());
+        service.setSubtitle(serviceAddDTO.getSubtitle());
     }
 
     private void checkExistByTitleNotId(String title, Integer id) {
